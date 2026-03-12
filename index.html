@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日式燒肉達人</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <header>
+            <h1>🔥 日式燒肉達人 🔥</h1>
+            <div class="stats">
+                <div class="score-board">分數: <span id="score">0</span></div>
+                <div class="message-board" id="message">歡迎光臨！請放上食材開始燒烤！</div>
+            </div>
+        </header>
+
+        <main>
+            <!-- 烤爐區域 -->
+            <div class="grill-container">
+                <div class="grill-mesh">
+                    <!-- 烤網格子，用 JS 動態生成 -->
+                </div>
+                <div class="coals">
+                    <!-- 炭火特效 -->
+                    <div class="coal"></div>
+                    <div class="coal"></div>
+                    <div class="coal"></div>
+                    <div class="coal"></div>
+                    <div class="coal"></div>
+                </div>
+            </div>
+
+            <!-- 食材選擇區 -->
+            <div class="ingredients-panel">
+                <h2>食材區 (點擊選取，再點烤網放置)</h2>
+                <div class="ingredients-list" id="ingredients-list">
+                    <!-- JS 生成 -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 音效 (可選，這裡用簡單的 JS 合成音效或視覺回饋代替) -->
+    <script src="script.js"></script>
+</body>
+</html>
