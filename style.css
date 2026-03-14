@@ -32,6 +32,7 @@ body {
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 20px rgba(0,0,0,0.5);
     border: 1px solid #333;
+    position: relative;
 }
 
 header {
@@ -70,17 +71,103 @@ h1 {
     transition: color 0.3s ease;
 }
 
-/* 烤爐設計 */
+.controls {
+    display: flex;
+    gap: 10px;
+}
+
+/* 音效與放棄按鈕 */
+.sound-btn, .abandon-btn {
+    background-color: #555;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.sound-btn:hover {
+    background-color: #4caf50; /* 開啟時的色系 */
+}
+
+.sound-btn.muted {
+    background-color: #ff3333; /* 關閉時的色系 */
+}
+
+/* 烤爐與主要遊戲區佈局 */
+.main-play-area {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.grill-section {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+}
+
+/* 遊戲開始與關卡選擇畫面 */
+.start-screen {
+    background: rgba(0, 0, 0, 0.85);
+    padding: 30px;
+    border-radius: 15px;
+    border: 2px solid var(--primary-color);
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.start-screen h2 {
+    color: #ffd700;
+    margin-bottom: 20px;
+}
+
+.level-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.level-btn {
+    background: #333;
+    color: white;
+    border: 2px solid #555;
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.level-btn:hover {
+    background: #555;
+    border-color: var(--primary-color);
+    transform: scale(1.02);
+}
+
+.level-btn h3 {
+    margin-bottom: 5px;
+    color: var(--primary-color);
+}
+
+.level-btn p {
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+/* 烤爐設計 - 修改為圓形 */
 .grill-container {
     position: relative;
-    width: 100%;
-    height: 350px;
+    width: 380px; /* 調整大小使其為正方形 */
+    height: 380px;
     background-color: #000;
-    border-radius: 15px;
-    border: 8px solid #4a3b32; /* 爐邊 */
-    box-shadow: inset 0 0 50px rgba(255, 69, 0, 0.2);
+    border-radius: 50%; /* 變成圓形 */
+    border: 15px solid #4a3b32; /* 爐邊 */
+    box-shadow: inset 0 0 50px rgba(255, 69, 0, 0.4), 0 10px 30px rgba(0,0,0,0.8);
     overflow: hidden;
-    margin-bottom: 30px;
     perspective: 1000px;
 }
 
@@ -93,11 +180,12 @@ h1 {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: flex-end;
+    align-content: center; /* 置中炭火 */
     padding: 20px;
     gap: 10px;
     z-index: 1;
     filter: blur(2px);
+    border-radius: 50%;
 }
 
 .coal {
@@ -124,7 +212,7 @@ h1 {
     100% { opacity: 1; box-shadow: 0 0 30px #ff7b00, inset 0 0 20px #ff4500; }
 }
 
-/* 烤網 */
+/* 烤網 - 圓形範圍計算會在 JS 處理，這裡維持網格背景 */
 .grill-mesh {
     position: absolute;
     top: 0;
@@ -135,22 +223,31 @@ h1 {
     background-image: 
         linear-gradient(90deg, transparent 95%, var(--grill-line-color) 95%),
         linear-gradient(0deg, transparent 95%, var(--grill-line-color) 95%);
-    background-size: 50px 50px;
+    background-size: 38px 38px; /* 配合 10x10 格子 */
     display: grid;
     grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(5, 1fr);
+    grid-template-rows: repeat(10, 1fr);
     gap: 0;
+    border-radius: 50%;
+    overflow: hidden; /* 切割超出圓形的部分 */
 }
 
 .grill-cell {
     width: 100%;
     height: 100%;
-    border: 1px dashed rgba(255,255,255,0.1);
+    position: relative;
+    /* border: 1px dashed rgba(255,255,255,0.05); 隱藏格子邊框會更好看 */
     cursor: pointer;
     transition: background-color 0.2s;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+/* 確保圓形外面的格子不能點 */
+.grill-cell.invalid {
+    visibility: hidden;
+    pointer-events: none;
 }
 
 .grill-cell.temp-hot {
@@ -161,24 +258,91 @@ h1 {
     background: radial-gradient(circle, rgba(0, 0, 0, 0.4) 0%, transparent 70%);
 }
 
-.grill-cell:hover {
+.grill-cell:hover:not(.invalid) {
     background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 訂單區域 */
+.order-panel {
+    width: 200px;
+    background: rgba(0,0,0,0.6);
+    border: 2px solid #555;
+    border-radius: 10px;
+    padding: 15px;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    flex-shrink: 0;
+}
+
+.order-panel h3 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #4caf50;
+    border-bottom: 1px solid #444;
+    padding-bottom: 5px;
+}
+
+#order-list {
+    list-style: none;
+    padding: 0;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    padding: 5px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 5px;
+}
+
+.order-item-icon {
+    width: 30px;
+    height: 30px;
+    background-size: cover;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+
+.order-item.completed {
+    opacity: 0.5;
+    text-decoration: line-through;
+    color: #888;
+}
+
+/* 時間顯示 */
+.time-board {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ff3333;
 }
 
 /* 食材項 */
 .food-item {
-    width: 200%; /* Make them much bigger than a single cell */
-    height: 200%;
-    border-radius: 10px;
-    background-size: cover;
+    position: absolute;
+    width: 250%; 
+    height: 250%;
+    top: -75%;
+    left: -75%;
+    border-radius: 45%;
+    background-size: 180%;
     background-position: center;
+    background-repeat: no-repeat;
     cursor: pointer;
     transition: transform 0.1s, filter 0.3s;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-    position: relative;
     user-select: none;
     z-index: 5;
+    /* 已透過 Python 腳本將食材圖片本身進行實體去背成透明 PNG，故移除 mix-blend-mode */
+    filter: drop-shadow(0 5px 5px rgba(0,0,0,0.8));
 }
+
+/* 針對大草蝦特調，運用背景位置偏移來去頭去尾 */
+.food-item[data-food-type="prawn"] {
+    background-size: 130%; /* 縮小一點讓他顯示多一些身體 */
+    background-position: 50% 60%; /* 往下偏，避開蝦頭 */
+}
+
 
 .food-item:active {
     transform: scale(0.9);
@@ -188,9 +352,43 @@ h1 {
     animation: sizzle 0.1s infinite alternate;
 }
 
+/* 翻面提示 */
+.flip-prompt {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 69, 0, 0.9);
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 900;
+    padding: 5px 10px;
+    border: 2px solid white;
+    border-radius: 5px;
+    pointer-events: none; /* 點擊穿透到肉上 */
+    animation: pulse 0.3s infinite alternate;
+    white-space: nowrap;
+    z-index: 20;
+    box-shadow: 0 0 10px rgba(0,0,0,0.8);
+}
+
+@keyframes pulse {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    100% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 15px red; }
+}
+
 @keyframes sizzle {
     0% { transform: translateY(0) scale(1.02); }
     100% { transform: translateY(-1px) scale(0.98); }
+}
+
+.food-item.cooking.flipped {
+    animation: sizzle-flipped 0.1s infinite alternate;
+}
+
+@keyframes sizzle-flipped {
+    0% { transform: rotateY(180deg) translateY(0) scale(1.02); }
+    100% { transform: rotateY(180deg) translateY(-1px) scale(0.98); }
 }
 
 /* 煙霧特效 */
@@ -222,16 +420,18 @@ h1 {
 }
 
 .ingredients-list {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 15px;
+    justify-items: center;
 }
 
 .ingredient-btn {
     background: #222;
     border: 2px solid #555;
     border-radius: 10px;
-    padding: 10px 20px;
+    padding: 8px;
+    width: 80px;
     color: white;
     cursor: pointer;
     display: flex;
@@ -255,23 +455,48 @@ h1 {
     width: 60px;
     height: 60px;
     margin-bottom: 5px;
-    background-size: cover;
+    background-size: 180%;
     background-position: center;
-    border-radius: 10px;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    /* 弱化內陰影，因為食材去背後會露出這裡的底色，產生黑邊錯覺 */
     box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    background-color: rgba(34, 34, 34, 0.5); /* 給個微透明底色托住食材 */
 }
+
+/* 放棄按鈕 hover */
+.abandon-btn:hover {
+    background-color: #ff3333;
+}
+
+/* 針對大草蝦圖示特調 */
+[data-type="prawn"] .ingredient-icon {
+    background-size: 130%;
+    background-position: 50% 60%;
+}
+
+/* 針對瘦長的 A5 和牛肋條特調 */
+[data-type="wagyu_rib"] .ingredient-icon {
+    background-size: 130%;
+    background-position: 50% 50%;
+}
+
 
 .ingredient-name {
     font-size: 0.9rem;
     font-weight: bold;
 }
 
-/* 食材顏色過渡類（用 CSS 濾鏡或顏色模擬燒烤） */
-/* 這裡我們會透過 JS 動態調整元素的樣式或類別 */
-.status-raw { filter: brightness(1) sepia(0); }
-.status-medium { filter: brightness(0.8) sepia(0.5) hue-rotate(-10deg); }
-.status-perfect { filter: brightness(0.6) sepia(0.8) hue-rotate(-20deg) contrast(1.2); }
-.status-burnt { filter: brightness(0.2) grayscale(1); }
+/* 食材顏色過渡類 */
+.status-raw { filter: drop-shadow(0 5px 5px rgba(0,0,0,0.8)) brightness(1); }
+.status-medium { filter: drop-shadow(0 5px 5px rgba(0,0,0,0.8)) brightness(0.9) sepia(0.3) saturate(0.8) hue-rotate(-10deg); }
+.status-perfect { filter: drop-shadow(0 5px 5px rgba(0,0,0,0.8)) brightness(0.8) sepia(0.5) hue-rotate(-20deg) contrast(1.1) saturate(1.2); }
+.status-burnt { filter: drop-shadow(0 5px 5px rgba(0,0,0,0.8)) brightness(0.3) grayscale(0.8) contrast(1.2); }
+
+/* 大草蝦專屬顏色變化 (由灰轉橘紅) */
+.food-item[data-food-type="prawn"].status-medium { filter: drop-shadow(0 5px 5px rgba(0,0,0,0.8)) sepia(1) saturate(3) hue-rotate(-30deg) brightness(0.9); }
+.food-item[data-food-type="prawn"].status-perfect { filter: drop-shadow(0 5px 5px rgba(0,0,0,0.8)) sepia(1) saturate(4) hue-rotate(-15deg) contrast(1.2) brightness(0.9); }
+.food-item[data-food-type="prawn"].status-burnt { filter: drop-shadow(0 5px 5px rgba(0,0,0,0.8)) sepia(1) saturate(3) hue-rotate(-15deg) brightness(0.4) contrast(1.5); }
 
 /* 獎勵提示文字 */
 .points-popup {

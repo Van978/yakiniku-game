@@ -13,16 +13,42 @@
             <h1>🔥 日式燒肉達人 🔥</h1>
             <div class="stats">
                 <div class="score-board">分數: <span id="score">0</span></div>
-                <div class="message-board" id="message">歡迎光臨！請放上食材開始燒烤！</div>
+                <div class="time-board" id="timer-container">時間: <span id="time">--</span>s</div>
+                <div class="message-board" id="message">歡迎光臨！準備好請按開始！</div>
+                <div class="controls">
+                    <button id="sound-btn" class="sound-btn" onclick="toggleSound()">🔊 音效: 開</button>
+                    <button id="abandon-btn" class="abandon-btn" style="display: none;" onclick="abandonGame()">放棄不烤了</button>
+                </div>
             </div>
         </header>
 
+        <!-- 遊戲開始與關卡選擇畫面 -->
+        <div id="start-screen" class="start-screen">
+            <h2>選擇關卡開始營業</h2>
+            <div class="level-buttons">
+                <button class="level-btn" onclick="startGame(1)">
+                    <h3>Level 1: 自由燒烤</h3>
+                    <p>60秒內獲得200分即可過關！</p>
+                </button>
+                <button class="level-btn" onclick="startGame(2)">
+                    <h3>Level 2: 客戶指定烤</h3>
+                    <p>90秒內完成左側訂單(不可烤焦)</p>
+                </button>
+                <button class="level-btn" onclick="startGame(3)">
+                    <h3>Level 3: 終極燒烤</h3>
+                    <p>120秒內完成進階訂單(必須完美)</p>
+                </button>
+            </div>
+        </div>
+
         <main>
             <!-- 烤爐區域 -->
-            <div class="grill-container">
-                <div class="grill-mesh">
-                    <!-- 烤網格子，用 JS 動態生成 -->
-                </div>
+            <div class="main-play-area">
+                <div class="grill-section">
+                    <div class="grill-container">
+                        <div class="grill-mesh">
+                            <!-- 烤網格子，用 JS 動態生成 -->
+                        </div>
                 <div class="coals">
                     <!-- 炭火特效 -->
                     <div class="coal"></div>
@@ -30,6 +56,16 @@
                     <div class="coal"></div>
                     <div class="coal"></div>
                     <div class="coal"></div>
+                </div>
+                    </div>
+                </div>
+
+                <!-- 訂單區域 (Lv2, Lv3 顯示) -->
+                <div id="order-panel" class="order-panel" style="display: none;">
+                    <h3>📝 客戶訂單</h3>
+                    <ul id="order-list">
+                        <!-- JS 動態生成 -->
+                    </ul>
                 </div>
             </div>
 
@@ -43,7 +79,8 @@
         </main>
     </div>
 
-    <!-- 音效 (可選，這裡用簡單的 JS 合成音效或視覺回饋代替) -->
-    <script src="script.js"></script>
+    <!-- 音效 (新增了烤肉滋滋聲) -->
+    <audio id="sizzle-sound" src="sizzle.m4a" loop preload="auto"></audio>
+    <script src="script.js?v=4"></script>
 </body>
 </html>
