@@ -25,7 +25,7 @@ body {
 }
 
 .game-container {
-    width: 100%;
+    width: 95%;
     max-width: 800px;
     padding: 20px;
     background: linear-gradient(135deg, #2a2a2a 0%, #111 100%);
@@ -33,6 +33,7 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 20px rgba(0,0,0,0.5);
     border: 1px solid #333;
     position: relative;
+    margin: 20px auto;
 }
 
 header {
@@ -58,14 +59,14 @@ h1 {
     border: 1px solid #444;
 }
 
-/* 代言人 Kye君 樣式 */
+/* 代言人 Kye君 樣式 - 修正為絕對定位且不佔空間 */
 .mascot-container {
     position: absolute;
-    right: 20px;
-    top: 10px;
-    width: 100px;
-    height: 100px;
-    z-index: 100;
+    right: -60px; /* 移到右側容器外，不擠壓內容 */
+    bottom: 20px;
+    width: 150px;
+    height: 150px;
+    z-index: 101;
     pointer-events: none;
     animation: mascotFloat 3s ease-in-out infinite;
 }
@@ -75,32 +76,32 @@ h1 {
     height: 100%;
     object-fit: contain;
     filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
+    border-radius: 15px; /* 給圖樣一點圓角感 */
 }
 
 .mascot-speech {
     position: absolute;
-    top: -40px;
-    right: 50%;
+    top: -50px;
+    left: -20px;
     background: white;
     color: #333;
-    padding: 6px 12px;
-    border-radius: 12px;
-    font-size: 0.85rem;
+    padding: 8px 15px;
+    border-radius: 15px;
+    font-size: 0.9rem;
     font-weight: bold;
     white-space: nowrap;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
     opacity: 0;
-    transform: translateX(50%) translateY(10px);
+    transform: translateY(10px);
     animation: speechFade 8s ease-in-out infinite;
 }
 
-/* 對話泡泡的小箭頭 */
+/* 對話泡泡的小箭頭 (修正方向) */
 .mascot-speech::after {
     content: '';
     position: absolute;
     bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 20%;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
     border-top: 8px solid white;
