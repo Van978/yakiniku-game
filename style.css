@@ -58,6 +58,65 @@ h1 {
     border: 1px solid #444;
 }
 
+/* 代言人 Kye君 樣式 */
+.mascot-container {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    width: 100px;
+    height: 100px;
+    z-index: 100;
+    pointer-events: none;
+    animation: mascotFloat 3s ease-in-out infinite;
+}
+
+#kye-mascot {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
+}
+
+.mascot-speech {
+    position: absolute;
+    top: -40px;
+    right: 50%;
+    background: white;
+    color: #333;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    opacity: 0;
+    transform: translateX(50%) translateY(10px);
+    animation: speechFade 8s ease-in-out infinite;
+}
+
+/* 對話泡泡的小箭頭 */
+.mascot-speech::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid white;
+}
+
+@keyframes mascotFloat {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-8px) rotate(3deg); }
+}
+
+@keyframes speechFade {
+    0%, 5%, 95%, 100% { opacity: 0; transform: translateX(50%) translateY(10px); }
+    15%, 85% { opacity: 1; transform: translateX(50%) translateY(0); }
+}
+
+
 .score-board {
     font-size: 1.5rem;
     font-weight: bold;
